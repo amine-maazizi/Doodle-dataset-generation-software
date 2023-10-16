@@ -1,6 +1,5 @@
 import pygame as pg
 from pygame.locals import *
-import pygame_textinput
 import os
 import sys
 import json
@@ -8,7 +7,6 @@ import time
 from PIL import Image
 
 from canvas import Canvas
-from label_input import LabelInput
 
 
 class Application:
@@ -41,15 +39,13 @@ class Application:
         self.clock: pg.time.Clock = pg.time.Clock()
         
         self.canvas = Canvas(self.display, 28, 28)
-        self.label_input = LabelInput()
         self.index = 0
 
-    def process(self, dt: float, events) -> None:
+    def process(self, dt: float) -> None:
         """
         Process the application's logic based on the time step 'dt'.
         """        
         self.canvas.process(dt)
-        self.label_input.process(dt, events)
     
 
     def render(self) -> None:
@@ -75,7 +71,7 @@ class Application:
                     self.index += 1     
 
             if dt:
-                self.process(dt, events)
+                self.process(dt)
             self.render()
 
             dt, last_time = time.time() - last_time, time.time()
