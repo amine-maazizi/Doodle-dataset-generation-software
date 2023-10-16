@@ -1,0 +1,7 @@
+{
+    "Title": "Doodle Dataset Generation",
+    "Width": 800,
+    "Height": 800,
+    "FPS": 60,
+    "DatasetDir": "./dataset"
+}
