@@ -2,6 +2,8 @@
     "Title": "Doodle Dataset Generation",
     "ScreenDim": [500, 500],
     "GUIPadding": 25,
+    "ImageSize": [16, 16],
     "FPS": 60,
-    "DatasetDir": "./dataset"
+    "DatasetDir": "./dataset",
+    "NumberOfVersion": 10
 }

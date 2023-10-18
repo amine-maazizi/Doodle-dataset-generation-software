@@ -1,4 +1,5 @@
 pygame
 tensorflow
+scipy
 pillow
 pandas

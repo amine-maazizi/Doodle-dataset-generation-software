@@ -29,7 +29,7 @@ class Canvas:
         if left_pressed or right_pressed:
             x, y = pg.mouse.get_pos()
             
-            if (0 <= x <= self.win_w) and (0 <= y <= self.win_h):
+            if (0 <= x < self.win_w) and (0 <= y < self.win_h):
                 x_scale = self.arr_w / self.win_w
                 y_scale = self.arr_h / self.win_h
                 x_target, y_target = int(x * x_scale), int(y * y_scale)
@@ -48,3 +48,7 @@ class Canvas:
     
     def get_canvas_dimensions(self) -> (int, int):
         return self.arr_w, self.arr_h
+    
+    def clear_canvas(self) -> None:
+        self.canvas_array = np.zeros((self.arr_w, self.arr_h, 3), dtype=np.uint8)
+        
