@@ -4,22 +4,20 @@ import sys
 import time
 from PIL import Image
 import numpy as np
-import pandas as pd
 
 from window import Window
 from canvas import Canvas
 from config_manager import Config
-from data_handler import DataHandler 
+from data_handler import DataHandler
 from data_augmentation import DataAugmentation
 
 from gui.gui_container import GUIContainer
 from gui.input_entry import InputEntry
 from gui.check_button import CheckButton
 
-
 class Application:
-    instance = None  
-    
+    instance = None
+
     def __new__(cls: type):
         """
         Create a new instance of the Application class if it doesn't already exist.
@@ -32,32 +30,28 @@ class Application:
         """
         Initialize the Application object.
         """
-        
-
         self.config = Config('./config/config.json')
         self.datahandler = DataHandler('./dataset')
         self.datahandler.clear_dataset()
 
         self.window_manager = Window(self.config)
         self.clock: pg.time.Clock = pg.time.Clock()
-        
+
         self.canvas = Canvas(self.config)
         self.index = 0
-        
+
         self.datagen = DataAugmentation(self.config)
-        
-        
+
         self.width, self.height = self.config.get('ScreenDim')
         self.label_entry = InputEntry(5, self.height + 2, 100, 20)
         self.datagen_checkbutton = CheckButton(self.width - 175, self.height + 2, 100, 20, text='Activate Data Augmentation')
         self.gui_container = GUIContainer(self.label_entry, self.datagen_checkbutton)
-        
+
     def process(self, dt: float) -> None:
         """
         Process the application's logic based on the time step 'dt'.
-        """        
+        """
         self.canvas.process(dt)
-    
 
     def render(self) -> None:
         """
