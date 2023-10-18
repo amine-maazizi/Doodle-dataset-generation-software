@@ -13,7 +13,6 @@ A versatile tool designed for creating custom doodle datasets to aid machine lea
     - [Installing the repository](#installing-the-repository)
   - [Usage](#usage)
   - [Configuration](#configuration)
-  - [Configuration](#configuration-1)
   - [Contributing](#contributing)
   - [License](#license)
   - [Author](#author)
@@ -40,18 +39,20 @@ Run the following commands on a configured terminal:
 
 ## Usage
 
-1. Launch the `main.py` file, and you'll access an interface where you can draw your doodles. Use left-click to draw, right-click to erase a pixel, and backspace to clear the entire doodle. ![doodle drawn](media/med_0.PNG)
-2. The doodle's resolution can vary based on a specific parameter in the config.json file (explained in the next section).  ![bigger_doodle](media/med_1.PNG)
-3. After drawing, go to the text entry field at the bottom right and specify the class to which the doodle belongs. If no class is entered before submission, it defaults to '0'. ![entry](media/med_2.PNG)
-4. Simplify dataset creation by activating the checkbutton at the bottom left to enable data augmentation. This generates additional images with minor variations.  ![augmentation](media/med_3.PNG)
+1. Launch the `main.py` file, and you'll access an interface where you can draw your doodles. Use left-click to draw, right-click to erase a pixel, and backspace to clear the entire doodle. 
+   ![doodle drawn](media/med_0.PNG)
+2. The doodle's resolution can vary based on a specific parameter in the config.json file (explained in the next section).  
+   ![bigger_doodle](media/med_1.PNG)
+3. After drawing, go to the text entry field at the bottom right and specify the class to which the doodle belongs. If no class is entered before submission, it defaults to '0'. 
+   ![entry](media/med_2.PNG)
+4. Simplify dataset creation by activating the checkbutton at the bottom left to enable data augmentation. This generates additional images with minor variations.  
+   ![augmentation](media/med_3.PNG)
 5. When ready to submit, press 'Enter' to add the image (or a bundle of images with data augmentation) to the dataset folder.
 6. Repeat the process until you have a substantial dataset for your needs.
-7. Upon program exit, you'll find a `data.csv` file in the dataset folder, in addition to your drawn doodles. ![folder](media/med_4.PNG)
+7. Upon program exit, you'll find a `data.csv` file in the dataset folder, in addition to your drawn doodles. 
+   ![folder](media/med_4.PNG)
 8. The `data.csv` file contains the filenames of each doodle and their associated class.
-9. Congratulations! You now have a complete dataset ready for your deep learning endeavors.
-
-
-## Configuration
+9.  Congratulations! You now have a complete dataset ready for your deep learning endeavors.
 
 ## Configuration
 
