@@ -1,15 +1,17 @@
 import pygame as pg
 from pygame.locals import *
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import os
 import sys
-import json
 import time
 from PIL import Image
 import numpy as np
 import pandas as pd
 
+from window import Window
 from canvas import Canvas
+from config_manager import Config
+from data_handler import DataHandler 
+from data_augmentation import DataAugmentation
+
 from gui.gui_container import GUIContainer
 from gui.input_entry import InputEntry
 from gui.check_button import CheckButton
@@ -17,8 +19,7 @@ from gui.check_button import CheckButton
 
 class Application:
     instance = None  
-    config: dict = None
-
+    
     def __new__(cls: type):
         """
         Create a new instance of the Application class if it doesn't already exist.
@@ -31,39 +32,26 @@ class Application:
         """
         Initialize the Application object.
         """
-        with open('./config/config.json') as f:
-            Application.config = json.load(f)
+        
 
-        self.dataset_dir = self.clear_dataset()
+        self.config = Config('./config/config.json')
+        self.datahandler = DataHandler('./dataset')
+        self.datahandler.clear_dataset()
 
-        pg.init()
-
-        self.width, self.height = Application.config['ScreenDim']
-        self.g_padding = Application.config['GUIPadding']
-        pg.display.set_caption(self.config['Title'])
-        self.display: pg.Surface = pg.display.set_mode([self.width, self.height + self.g_padding])
+        self.window_manager = Window(self.config)
         self.clock: pg.time.Clock = pg.time.Clock()
         
-        self.img_w, self.img_h = Application.config['ImageSize']
-        self.canvas = Canvas(Application.config, self.img_w, self.img_h)
+        self.canvas = Canvas(self.config)
         self.index = 0
         
-        self.datagen = ImageDataGenerator(
-            rotation_range=20,
-            width_shift_range=0.2,
-            height_shift_range=0.2,
-            shear_range=0.2,
-            zoom_range=0.2,
-            horizontal_flip=True,
-            fill_mode='nearest'
-        )
+        self.datagen = DataAugmentation(self.config)
         
-        self.label_entry = InputEntry(5, self.height, 100, 20)
-        self.datagen_checkbutton = CheckButton(self.width - 130, self.height, 100, 20, text='Activate ImgDataGen')
+        
+        self.width, self.height = self.config.get('ScreenDim')
+        self.label_entry = InputEntry(5, self.height + 2, 100, 20)
+        self.datagen_checkbutton = CheckButton(self.width - 175, self.height + 2, 100, 20, text='Activate Data Augmentation')
         self.gui_container = GUIContainer(self.label_entry, self.datagen_checkbutton)
         
-        self.data = pd.DataFrame(columns=['img_file', 'label'])
-
     def process(self, dt: float) -> None:
         """
         Process the application's logic based on the time step 'dt'.
@@ -75,8 +63,8 @@ class Application:
         """
         Render the application's graphical components.
         """
-        self.canvas.render(self.display)
-        self.gui_container.render(self.display)
+        self.canvas.render(self.window_manager.get_screen())
+        self.gui_container.render(self.window_manager.get_screen())
 
     def launch(self) -> None:
         """
@@ -87,7 +75,7 @@ class Application:
             events = pg.event.get()
             for ev in events:
                 if ev.type == QUIT or (ev.type == KEYDOWN and ev.key == K_ESCAPE):
-                    self.data.to_csv(self.dataset_dir + '\data.csv', index=False)
+                    self.datahandler.save_to_csv()
                     pg.quit()
                     sys.exit()
                 self.gui_container.handle_events(ev)
@@ -103,19 +91,7 @@ class Application:
 
             dt, last_time = time.time() - last_time, time.time()
             pg.display.update()
-            self.clock.tick(self.config['FPS'])
-
-    def clear_dataset(self) -> str:
-        dataset_dir = Application.config['DatasetDir']
-        if os.path.exists(dataset_dir):
-            file_list = os.listdir(dataset_dir)
-            for filename in file_list:
-                file_path = os.path.join(dataset_dir, filename)
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
-        else:
-            os.makedirs(dataset_dir)
-        return dataset_dir
+            self.clock.tick(self.config.get('FPS'))
 
     def on_submit(self) -> None:
         original_arr = self.canvas.get_canvas_array()
@@ -124,21 +100,15 @@ class Application:
         label = label if label else '0'
 
         if self.datagen_checkbutton.get_pressed():
-            n = Application.config['NumberOfVersion']
-            for i in range(n):  # Save n augmented versions
-                transformed_arr = self.datagen.random_transform(original_arr)
+            augmented_data = self.datagen.apply_data_augmentation(original_arr)
+            for i, transformed_arr in enumerate(augmented_data):
                 image = Image.fromarray(np.fliplr(np.rot90(transformed_arr, k=3)))
-                image.save(os.path.join(self.dataset_dir, f'{self.index}_var_{i+1}.png'))
-
-                if label:
-                    self.data = pd.concat([self.data, pd.DataFrame({'img_file': [f'{self.index}_var_{i+1}.png'], 'label': [label]})], ignore_index=True)
+                self.datahandler.save_img(image, f'{self.index}_var_{i+1}.png')
+                self.datahandler.add_to_dataset({'img_file': [f'{self.index}_var_{i+1}.png'], 'label': [label]})
 
         # Save the original doodle
         transformed_arr = np.fliplr(np.rot90(original_arr, k=3))
         image = Image.fromarray(transformed_arr)
-        image.save(os.path.join(self.dataset_dir, f'{self.index}.png'))
-
-        if label:
-            self.data = pd.concat([self.data, pd.DataFrame({'img_file': [f'{self.index}.png'], 'label': [label]})], ignore_index=True)
-
+        self.datahandler.save_img(image, f'{self.index}.png')
+        self.datahandler.add_to_dataset({'img_file': [f'{self.index}.png'], 'label': [label]})
         self.index += 1

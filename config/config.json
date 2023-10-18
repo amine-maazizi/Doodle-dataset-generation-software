@@ -5,5 +5,13 @@
     "ImageSize": [16, 16],
     "FPS": 60,
     "DatasetDir": "./dataset",
-    "NumberOfVersion": 10
+
+    "NumberOfVersion": 10,
+    "RotationRange": 20,
+    "WildthShiftRange": 0.2,
+    "HeightShiftRange": 0.2,
+    "ShearRange": 0.2,
+    "ZoomRange": 0.2,
+    "HorizontalFlip": true,
+    "FillMode": "nearest"
 }

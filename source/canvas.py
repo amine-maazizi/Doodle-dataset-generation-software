@@ -4,7 +4,7 @@ import numpy as np
 
 
 class Canvas:
-    def __init__(self, config: dict, array_width: int, array_height: int) -> None:
+    def __init__(self, config: dict) -> None:
         """
         Initialize the Canvas.
 
@@ -13,9 +13,9 @@ class Canvas:
             array_width (int): Width of the canvas array.
             array_height (int): Height of the canvas array.
         """
-        self.arr_w, self.arr_h = array_width, array_height
-        self.win_w, self.win_h = config['ScreenDim']
-        self.canvas_array: np.ndarray = np.zeros((array_width, array_height, 3), dtype=np.uint8)
+        self.arr_w, self.arr_h = config.get('ImageSize')
+        self.win_w, self.win_h = config.get('ScreenDim')
+        self.canvas_array: np.ndarray = np.zeros((self.arr_w, self.arr_h, 3), dtype=np.uint8)
         
     def process(self, dt: float) -> None:
         """
