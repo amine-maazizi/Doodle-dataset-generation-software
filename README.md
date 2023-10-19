@@ -36,10 +36,10 @@ Run the following commands on a configured terminal:
    cd Doodle-dataset-generation-software
    ```
 5. ```bash
-    python -m venv env
+   python -m venv env
    ```
 6. ```bash
-     env\Scripts\activate
+   env\Scripts\activate
    ```
 8. ```bash
    python -m pip install --upgrade pip
