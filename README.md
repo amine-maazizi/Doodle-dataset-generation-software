@@ -29,13 +29,25 @@ A versatile tool designed for creating custom doodle datasets to aid machine lea
 
 ### Installing the repository
 Run the following commands on a configured terminal:
-1. `git clone https://github.com/amine-maazizi/Doodle-dataset-generation-software.git`
-2. `cd Doodle-dataset-generation-software`
-3. `python -m venv env`
-4. `env\Scripts\activate`
-5. `python -m pip install --upgrade pip`
-6. `python -m pip install -r requirements.txt`
-7. `python source\main.py`
+1. ```bash
+   git clone https://github.com/amine-maazizi/Doodle-dataset-generation-software.git
+   ```
+3. ```bash
+   cd Doodle-dataset-generation-software
+   ```
+5. ```bash
+    python -m venv env
+   ```
+6. ```bash
+     env\Scripts\activate
+   ```
+8. ```bash
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+11. ```bash
+    python source\main.py
+    ```
 
 ## Usage
 
